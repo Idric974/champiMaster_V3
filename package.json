@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "nodemon": "^2.0.15",
+    "onoff": "^6.0.3"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "champimaster",
+  "version": "1.0.0",
+  "description": "champi_master",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Idric974/champiMaster.git"
+  },
+  "author": "Idric Evarne",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Idric974/champiMaster/issues"
+  },
+  "homepage": "https://github.com/Idric974/champiMaster#readme"
+}
