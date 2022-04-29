@@ -82,12 +82,12 @@ exports.getCo2 = async (req, res, next) => {
     //* I ) Mettre les valeurs dans un tableau.
 
     .then(() => {
-      // pendingRequest.push(numSalle);
-      // console.log(
-      //   magenta,
-      //   '[ DEMANDE DE CO2  ] Demandes mises dans le pool :',
-      //   pendingRequest
-      // );
+      pendingRequest.push(numSalle);
+      console.log(
+        magenta,
+        '[ DEMANDE DE CO2  ] Demandes mises dans le pool :',
+        pendingRequest
+      );
     })
 
     //* -------------------------------------------------
@@ -99,12 +99,12 @@ exports.getCo2 = async (req, res, next) => {
         //
         //* -------------------------------------------------
 
-        let salleATraiter = pendingRequest[0];
+        let numSalle = pendingRequest[0];
         console.log(
           jaune,
           '[ DEMANDE DE CO2  ] ' + functionsLibrary.displayTime(),
           'DEMANDE CO2 SALLE :',
-          salleATraiter
+          numSalle
         );
 
         console.log(
@@ -113,7 +113,7 @@ exports.getCo2 = async (req, res, next) => {
           'POMPE AIR SALLE'
         );
 
-        functionsLibrary.activationRelay(salleATraiter, 102);
+        functionsLibrary.activationRelay(numSalle, 102);
         await functionsLibrary.delay(1, 'seconde');
         functionsLibrary.activationRelay(38, 100);
         //co2 = await functionsLibrary.mesureCO2(90);
@@ -159,7 +159,7 @@ exports.getCo2 = async (req, res, next) => {
             jaune,
             '[ DEMANDE DE CO2  ] ' + functionsLibrary.displayTime(),
             'FIN DEMANDE CO2 SALLE : ',
-            salleATraiter
+            numSalle
           );
 
           pendingRequest.shift();
