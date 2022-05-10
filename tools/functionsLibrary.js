@@ -32,31 +32,31 @@ const getPin = (pin) => {
 
   switch (parseInt(pin)) {
     case 1:
-      relayPinGPIO = 32;
+      relayPinGPIO = 12;
       break;
 
     case 2:
-      relayPinGPIO = 22;
+      relayPinGPIO = 25;
       break;
 
     case 3:
-      relayPinGPIO = 16;
+      relayPinGPIO = 23;
       break;
 
     case 4:
-      relayPinGPIO = 18;
+      relayPinGPIO = 24;
       break;
 
     case 5:
-      relayPinGPIO = 29;
+      relayPinGPIO = 5;
       break;
 
     case 6:
-      relayPinGPIO = 31;
+      relayPinGPIO = 6;
       break;
 
     case 7:
-      relayPinGPIO = 37;
+      relayPinGPIO = 26;
       break;
 
     default:
