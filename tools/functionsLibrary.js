@@ -1,74 +1,6 @@
 const Gpio = require('onoff').Gpio;
 const magenta = '\x1b[35m';
 
-//! Activation des relays.
-
-const activationRelay = (relay, duree) => {
-  let convDuree = duree / 1000;
-  //   const relay_ON = new Gpio(relay, 'out');
-
-  console.log(
-    magenta,
-    '[ DEMANDE DE CO2  ] Relay ' +
-      relay +
-      ' activé' +
-      ' pour ' +
-      convDuree +
-      ' secondes.'
-  );
-
-  setTimeout(() => {
-    // const relay_OFF = new Gpio(relay, 'in');
-    console.log(magenta, '[ DEMANDE DE CO2  ] Relay ' + relay + ' déactivé.');
-  }, duree);
-};
-
-//! -------------------------------------------------
-
-//! Séléction du pin.
-
-const getPin = (pin) => {
-  let relayPinGPIO = 0;
-
-  switch (parseInt(pin)) {
-    case 1:
-      relayPinGPIO = 12;
-      break;
-
-    case 2:
-      relayPinGPIO = 25;
-      break;
-
-    case 3:
-      relayPinGPIO = 23;
-      break;
-
-    case 4:
-      relayPinGPIO = 24;
-      break;
-
-    case 5:
-      relayPinGPIO = 5;
-      break;
-
-    case 6:
-      relayPinGPIO = 6;
-      break;
-
-    case 7:
-      relayPinGPIO = 26;
-      break;
-
-    default:
-      relayPinGPIO = pin;
-      break;
-  }
-
-  return relayPinGPIO;
-};
-
-//! -------------------------------------------------
-
 //! Mesure du Co2.
 
 const mesureCO2 = async (nbMesure = 90) => {
@@ -137,4 +69,16 @@ const displayTime = () => {
 
 //! -------------------------------------------------
 
-module.exports = { activationRelay, getPin, mesureCO2, delay, displayTime };
+//! Similation de mesure Co2.
+
+let tauxCo2;
+
+let simulationMesureCo2 = () => {
+  setTimeout(() => {
+    tauxCo2 = 2600;
+  }, 90000);
+};
+
+//! -------------------------------------------------
+
+module.exports = { mesureCO2, delay, displayTime, simulationMesureCo2 };

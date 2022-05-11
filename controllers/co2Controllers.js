@@ -6,6 +6,7 @@ const magenta = '\x1b[35m';
 const cyan = '\x1b[36m';
 const jaune = '\x1b[33m';
 const vert = '\u001b[1;32m';
+const Gpio = require('onoff').Gpio;
 const functionsLibrary = require('../tools/functionsLibrary');
 
 //! -------------------------------------------------
@@ -13,6 +14,7 @@ const functionsLibrary = require('../tools/functionsLibrary');
 //! Les variables.
 
 let numSalle;
+let relay;
 let co2 = 0;
 let co2Room = 0;
 
@@ -21,10 +23,38 @@ let co2Room = 0;
 //! Les tableaux.
 
 let pendingRequest = [];
-// let pendingRequest = ['1', '2', '3', '4', '5', '6'];
-// let pendingRequest = ['1', '2'];
 
 //! -------------------------------------------------
+
+//! Les fonctions.
+
+const activationRelay = (relay, duree) => {
+  //
+
+  let convDuree = duree / 1000;
+
+  let relay_ON = new Gpio(relay, 'out'); // ===> Activation relay.
+
+  console.log(
+    magenta,
+    '[ DEMANDE DE CO2  ] Relay ' +
+      relay +
+      ' activé' +
+      ' pour ' +
+      convDuree +
+      ' secondes.'
+  );
+
+  setTimeout(() => {
+    let relay_OFF = new Gpio(relay, 'in'); // ===> Déactivation relay.
+
+    console.log(magenta, '[ DEMANDE DE CO2  ] Relay ' + relay + ' déactivé.');
+  }, duree);
+};
+
+//! -------------------------------------------------
+
+//! Les requetes.
 
 exports.getCo2 = async (req, res, next) => {
   //
@@ -32,10 +62,16 @@ exports.getCo2 = async (req, res, next) => {
   //! 1) Reception de la demand de Co2.
 
   const maPromesse = new Promise((resolve, reject) => {
+    //
     numSalle = req.body.numSalle;
 
     if (req.body.numSalle) {
       //
+
+      console.log(
+        vert,
+        '[ DEMANDE DE CO2  ] ***********************************************************'
+      );
 
       console.log(
         magenta,
@@ -43,13 +79,6 @@ exports.getCo2 = async (req, res, next) => {
           req.body.numSalle +
           '" a été prise en compte.'
       );
-
-      // res.status(200).json({
-      //   message:
-      //     'La demande de la salle ' +
-      //     req.body.numSalle +
-      //     ' a été prise en compte.',
-      // });
 
       resolve();
     } else {
@@ -79,7 +108,7 @@ exports.getCo2 = async (req, res, next) => {
 
   action()
     //
-    //* I ) Mettre les valeurs dans un tableau.
+    //* Mettre les valeurs dans un tableau.
 
     .then(() => {
       pendingRequest.push(numSalle);
@@ -92,14 +121,46 @@ exports.getCo2 = async (req, res, next) => {
 
     //* -------------------------------------------------
 
-    //* II ) Boucle sur le tableau.
+    //* Séléction du pin.
+
+    .then(() => {
+      let findGpio = () => {
+        if (numSalle == 1) {
+          relay = 12;
+          // console.log('GPIO = ', relay);
+        } else if (numSalle == 2) {
+          relay = 25;
+          //  console.log('GPIO = ', relay);
+        } else if (numSalle == 3) {
+          relay = 23;
+          // console.log('GPIO = ', relay);
+        } else if (numSalle == 4) {
+          relay = 24;
+          //  console.log('GPIO = ', relay);
+        } else if (numSalle == 5) {
+          relay = 5;
+          //  console.log('GPIO = ', relay);
+        } else if (numSalle == 6) {
+          relay = 6;
+          //  console.log('GPIO = ', relay);
+        } else if (numSalle == 7) {
+          relay = 26;
+          //  console.log('GPIO = ', relay);
+        }
+      };
+      findGpio();
+    })
+
+    //* -------------------------------------------------
+
+    //* Boucle sur le tableau.
 
     .then(() => {
       const launchProcessCO2 = async () => {
         //
-        //* -------------------------------------------------
 
         let numSalle = pendingRequest[0];
+
         console.log(
           jaune,
           '[ DEMANDE DE CO2  ] ' + functionsLibrary.displayTime(),
@@ -107,20 +168,34 @@ exports.getCo2 = async (req, res, next) => {
           numSalle
         );
 
+        //? POMPE AIR SALLE.
+
         console.log(
           cyan,
           '[ DEMANDE DE CO2  ] ' + functionsLibrary.displayTime(),
           'POMPE AIR SALLE'
         );
 
-        functionsLibrary.activationRelay(numSalle, 102);
+        //* Activation du relais de la salle qui demande pour 102 sec.
+        activationRelay(numSalle, 102000);
+        // activationRelay(27, 102000); //! <==> Test.
+
+        //* On attend 1 seconde.
         await functionsLibrary.delay(1, 'seconde');
-        functionsLibrary.activationRelay(38, 100);
-        //co2 = await functionsLibrary.mesureCO2(90);
-        co2 = 2500;
+
+        //* Activation du relais 38 pour 100 sec.
+        activationRelay(38, 100000);
+
+        //* Lancement de la mesure du Co2 pour 90 sec.
+        co2Room = await functionsLibrary.mesureCO2(90);
+        // co2Room = 2500; //! <==> Test.
+
+        //* On attend 15 secondes.
         await functionsLibrary.delay(15, 'seconde');
 
-        //* -------------------------------------------------
+        //? -------------------------------------------------
+
+        //? POMPE AIR EXT.
 
         console.log(
           cyan,
@@ -128,14 +203,26 @@ exports.getCo2 = async (req, res, next) => {
           'POMPE AIR EXT'
         );
 
-        functionsLibrary.activationRelay(7, 25);
+        //* Activation du relais 7 pour 25 sec.
+        activationRelay(7, 25);
+        // activationRelay(27, 25000); //! <==> Test.
+
+        //* On attend 1 seconde.
         await functionsLibrary.delay(1, 'seconde');
-        functionsLibrary.activationRelay(38, 20);
-        //co2 = await functionsLibrary.mesureCO2(10);
-        co2 = 2500;
+
+        //* Activation du relais 38 pour 20 sec.
+        activationRelay(38, 20000);
+
+        //* Lancement de la mesure du Co2 pour 10 sec.
+        co2 = await functionsLibrary.mesureCO2(10);
+        // co2 = 2500; //! <==> Test.
+
+        //* On attend 15 secondes.
         await functionsLibrary.delay(15, 'seconde');
 
-        //* -------------------------------------------------
+        //? -------------------------------------------------
+
+        //? ENVOIE VALEUR.
 
         console.log(
           cyan,
@@ -147,13 +234,11 @@ exports.getCo2 = async (req, res, next) => {
         if (co2 > 0 && co2 < 4000) {
           co2Room -= 500;
 
+          //* Envoie du taux de Co2 au front.
           res.status(200).json({ co2Room });
 
-          console.log(
-            cyan,
-            '[ DEMANDE DE CO2  ] ÉTAT DU POOL :',
-            pendingRequest
-          );
+          //* Suppression de la demande en cours dans le pool.
+          pendingRequest.shift();
 
           console.log(
             jaune,
@@ -162,24 +247,19 @@ exports.getCo2 = async (req, res, next) => {
             numSalle
           );
 
-          pendingRequest.shift();
-
-          console.log(
-            vert,
-            '[ DEMANDE DE CO2  ] *********************************************'
-          );
-
-          // Relance de la fonction si le pool n'est pas vide.
-
+          //* Relance de la fonction si le pool n'est pas vide.
           if (pendingRequest.length > 0) {
             launchProcessCO2();
           } else {
             console.log(
-              vert,
-              '*** TOUTES LES DEMANDES DE CO2 ONT ÉTÉ TRAITÉES ***'
+              cyan,
+              '[ DEMANDE DE CO2  ] ÉTAT DU POOL :',
+              pendingRequest
             );
           }
         }
+
+        //? -------------------------------------------------
       };
 
       launchProcessCO2();
@@ -193,8 +273,6 @@ exports.getCo2 = async (req, res, next) => {
         '[ DEMANDE DE CO2  ] Catch ==> Erreur dans le processus de traitement des demandes.'
       );
     });
-
-  //! -------------------------------------------------
-
-  //! LIMITE -------------------------------------------------
 };
+
+//! -------------------------------------------------
