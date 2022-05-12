@@ -183,8 +183,8 @@ exports.getCo2 = async (req, res, next) => {
         //* On attend 1 seconde.
         await functionsLibrary.delay(1, 'seconde');
 
-        //* Activation du relais 38 pour 100 sec.
-        activationRelay(38, 100000);
+        //* Activation du relais 20 pour 100 sec.
+        activationRelay(20, 100000);
 
         //* Lancement de la mesure du Co2 pour 90 sec.
         co2Room = await functionsLibrary.mesureCO2(90);
@@ -203,15 +203,15 @@ exports.getCo2 = async (req, res, next) => {
           'POMPE AIR EXT'
         );
 
-        //* Activation du relais 7 pour 25 sec.
-        activationRelay(7, 25);
+        //* Activation du relais 4 pour 25 sec.
+        activationRelay(4, 25);
         // activationRelay(27, 25000); //! <==> Test.
 
         //* On attend 1 seconde.
         await functionsLibrary.delay(1, 'seconde');
 
-        //* Activation du relais 38 pour 20 sec.
-        activationRelay(38, 20000);
+        //* Activation du relais 20 pour 20 sec.
+        activationRelay(20, 20000);
 
         //* Lancement de la mesure du Co2 pour 10 sec.
         co2 = await functionsLibrary.mesureCO2(10);
