@@ -17,6 +17,7 @@ let numSalle;
 let relay;
 let co2 = 0;
 let co2Room = 0;
+let modeTest = 'oui';
 
 //! -------------------------------------------------
 
@@ -177,8 +178,8 @@ exports.getCo2 = async (req, res, next) => {
         );
 
         //* Activation du relais de la salle qui demande pour 102 sec.
-        activationRelay(numSalle, 102000);
         // activationRelay(27, 102000); //! <==> Test.
+        activationRelay(numSalle, 102000);
 
         //* On attend 1 seconde.
         await functionsLibrary.delay(1, 'seconde');
@@ -187,8 +188,8 @@ exports.getCo2 = async (req, res, next) => {
         activationRelay(20, 100000);
 
         //* Lancement de la mesure du Co2 pour 90 sec.
-        co2Room = await functionsLibrary.mesureCO2(90);
         // co2Room = 2500; //! <==> Test.
+        co2Room = await functionsLibrary.mesureCO2(90);
 
         //* On attend 15 secondes.
         await functionsLibrary.delay(15, 'seconde');
@@ -204,8 +205,9 @@ exports.getCo2 = async (req, res, next) => {
         );
 
         //* Activation du relais 4 pour 25 sec.
+
+        //  activationRelay(27, 25000); //! <==> Test.
         activationRelay(4, 25);
-        // activationRelay(27, 25000); //! <==> Test.
 
         //* On attend 1 seconde.
         await functionsLibrary.delay(1, 'seconde');
@@ -214,8 +216,8 @@ exports.getCo2 = async (req, res, next) => {
         activationRelay(20, 20000);
 
         //* Lancement de la mesure du Co2 pour 10 sec.
-        co2 = await functionsLibrary.mesureCO2(10);
         // co2 = 2500; //! <==> Test.
+        co2 = await functionsLibrary.mesureCO2(10);
 
         //* On attend 15 secondes.
         await functionsLibrary.delay(15, 'seconde');
