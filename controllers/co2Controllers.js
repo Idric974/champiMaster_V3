@@ -64,7 +64,7 @@ exports.getCo2 = async (req, res, next) => {
   const maPromesse = new Promise((resolve, reject) => {
     //
     numSalle = req.params.numSalle;
-    console.log('numSalle ====> ', numSalle);
+    // console.log('numSalle ====> ', numSalle);
 
     if (req.params.numSalle) {
       //
@@ -178,7 +178,7 @@ exports.getCo2 = async (req, res, next) => {
         );
 
         //* Activation du relais de la salle qui demande pour 102 sec.
-        //activationRelay(27, 102000); //! <==> Test.
+        // activationRelay(27, 102000); //! <==> Test.
         activationRelay(relay, 102000);
 
         //* On attend 1 seconde.
@@ -206,7 +206,7 @@ exports.getCo2 = async (req, res, next) => {
 
         //* Activation du relais 4 pour 25 sec.
 
-        // activationRelay(27, 25000); //! <==> Test.
+        //activationRelay(27, 25000); //! <==> Test.
         activationRelay(4, 25);
 
         //* On attend 1 seconde.
@@ -237,10 +237,10 @@ exports.getCo2 = async (req, res, next) => {
           co2Room -= 500;
 
           //* Envoie du taux de Co2 au front.
-          //res.status(200).json('Le taux de Co2', { co2Room });
 
+          res.statusCode = 200;
           res.setHeader('Content-Type', 'application/json');
-          res.send({ co2Room });
+          res.end(JSON.stringify(co2Room));
 
           //* Suppression de la demande en cours dans le pool.
           pendingRequest.shift();
