@@ -1,54 +1,32 @@
-const http = require('http');
-const app = require('./app');
+const path = require('path');
+const co2Controllers = require('./controllers/co2Controllers');
+const express = require('express');
+const app = express();
 const vert = '\u001b[1;32m';
+const router = express.Router();
+const port = 5000;
 
-const normalizePort = (val) => {
-  const port = parseInt(val, 10);
-
-  if (isNaN(port)) {
-    return val;
-  }
-  if (port >= 0) {
-    return port;
-  }
-  return false;
-};
-
-const port = normalizePort(process.env.PORT || '5000');
-app.set('port', port);
-
-const errorHandler = (error) => {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
-  const address = server.address();
-  const bind =
-    typeof address === 'string' ? 'pipe ' + address : 'port: ' + port;
-  switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges.');
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use.');
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
-};
-
-const server = http.createServer(app);
-
-server.on('error', errorHandler);
-server.on('listening', () => {
-  const address = server.address();
-  const bind = typeof address === 'string' ? 'pipe ' + address : 'port ' + port;
-
-  console.log(
-    vert,
-    '[ SERVER          ] Le serveur de la master tourne sur le ' + bind
-  );
+app.use(function (req, res, next) {
+  req.setTimeout(0);
+  next();
 });
 
-server.listen(port);
+app.use('/', router);
+
+app.get('/getCo2/:numSalle', async (req, res) => {
+  let numSalle = req.params.numSalle;
+  // console.log('Sever : numSalle : ', numSalle);
+
+  let co2 = await co2Controllers.getCo2(req.params.numSalle);
+
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'application/json');
+  res.end(JSON.stringify(co2));
+});
+
+app.listen(port, () => {
+  console.log(
+    vert,
+    '[ SERVER          ] Le serveur de la master tourne sur le ' + port
+  );
+});

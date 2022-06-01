@@ -17,7 +17,6 @@ let numSalle;
 let relay;
 let co2 = 0;
 let co2Room = 0;
-let modeTest = 'oui';
 
 //! -------------------------------------------------
 
@@ -57,16 +56,13 @@ const activationRelay = (relay, duree) => {
 
 //! Les requetes.
 
-exports.getCo2 = async (req, res, next) => {
+function getCo2(numSalle) {
   //
-
-  //! 1) Reception de la demand de Co2.
+  //? 1) Reception de la demand de Co2.
 
   const maPromesse = new Promise((resolve, reject) => {
     //
-    numSalle = req.body.numSalle;
-
-    if (req.body.numSalle) {
+    if (numSalle) {
       //
 
       console.log(
@@ -77,7 +73,7 @@ exports.getCo2 = async (req, res, next) => {
       console.log(
         magenta,
         '[ DEMANDE DE CO2  ] La demande de la salle "' +
-          req.body.numSalle +
+          numSalle +
           '" a été prise en compte.'
       );
 
@@ -94,18 +90,18 @@ exports.getCo2 = async (req, res, next) => {
     }
   });
 
-  //! -------------------------------------------------
+  //? ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  //! Validateur.
+  //? Validateur.
 
   let action = async () => {
     let go = await maPromesse;
     return go;
   };
 
-  //! -------------------------------------------------
+  //? ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  //! Processus de traitement des demandes..
+  //? Processus de traitement des demandes..
 
   action()
     //
@@ -178,8 +174,8 @@ exports.getCo2 = async (req, res, next) => {
         );
 
         //* Activation du relais de la salle qui demande pour 102 sec.
-        // activationRelay(27, 102000); //! <==> Test.
-        activationRelay(relay, 102000);
+        activationRelay(27, 102000); //! <==> Test.
+        // activationRelay(relay, 102000);
 
         //* On attend 1 seconde.
         await functionsLibrary.delay(1, 'seconde');
@@ -188,8 +184,8 @@ exports.getCo2 = async (req, res, next) => {
         activationRelay(20, 100000);
 
         //* Lancement de la mesure du Co2 pour 90 sec.
-        // co2Room = 2500; //! <==> Test.
-        co2Room = await functionsLibrary.mesureCO2(90);
+        co2Room = 2500; //! <==> Test.
+        // co2Room = await functionsLibrary.mesureCO2(90);
 
         //* On attend 15 secondes.
         await functionsLibrary.delay(15, 'seconde');
@@ -206,8 +202,8 @@ exports.getCo2 = async (req, res, next) => {
 
         //* Activation du relais 4 pour 25 sec.
 
-        //  activationRelay(27, 25000); //! <==> Test.
-        activationRelay(4, 25);
+        activationRelay(27, 25000); //! <==> Test.
+        // activationRelay(4, 25);
 
         //* On attend 1 seconde.
         await functionsLibrary.delay(1, 'seconde');
@@ -216,8 +212,8 @@ exports.getCo2 = async (req, res, next) => {
         activationRelay(20, 20000);
 
         //* Lancement de la mesure du Co2 pour 10 sec.
-        // co2 = 2500; //! <==> Test.
-        co2 = await functionsLibrary.mesureCO2(10);
+        co2 = 3500; //! <==> Test.
+        // co2 = await functionsLibrary.mesureCO2(10);
 
         //* On attend 15 secondes.
         await functionsLibrary.delay(15, 'seconde');
@@ -237,7 +233,8 @@ exports.getCo2 = async (req, res, next) => {
           co2Room -= 500;
 
           //* Envoie du taux de Co2 au front.
-          res.status(200).json({ co2Room });
+
+          request.resolve(co2Room); //! <======> VALEURE CO2.
 
           //* Suppression de la demande en cours dans le pool.
           pendingRequest.shift();
@@ -275,6 +272,12 @@ exports.getCo2 = async (req, res, next) => {
         '[ DEMANDE DE CO2  ] Catch ==> Erreur dans le processus de traitement des demandes.'
       );
     });
-};
 
-//! -------------------------------------------------
+  //? ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+}
+
+//? Export de la fonction.
+
+module.exports = {
+  getCo2: getCo2,
+};
