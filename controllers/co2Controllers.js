@@ -87,22 +87,22 @@ async function launchProcessCO2() {
     if (numSalleCo2 == 1) {
       relay = 12;
       // console.log('GPIO = ', relay);
-    } else if (numSalle == 2) {
+    } else if (numSalleCo2 == 2) {
       relay = 25;
       //  console.log('GPIO = ', relay);
-    } else if (numSalle == 3) {
+    } else if (numSalleCo2 == 3) {
       relay = 23;
       // console.log('GPIO = ', relay);
-    } else if (numSalle == 4) {
+    } else if (numSalleCo2 == 4) {
       relay = 24;
       //  console.log('GPIO = ', relay);
-    } else if (numSalle == 5) {
+    } else if (numSalleCo2 == 5) {
       relay = 5;
       //  console.log('GPIO = ', relay);
-    } else if (numSalle == 6) {
+    } else if (numSalleCo2 == 6) {
       relay = 6;
       //  console.log('GPIO = ', relay);
-    } else if (numSalle == 7) {
+    } else if (numSalleCo2 == 7) {
       relay = 26;
       //  console.log('GPIO = ', relay);
     }
