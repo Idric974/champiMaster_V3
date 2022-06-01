@@ -81,6 +81,36 @@ async function getCo2(numSalle) {
 async function launchProcessCO2() {
   let request = pendingRequest[0];
 
+  //* Séléction du pin.
+
+  let findGpio = () => {
+    if (numSalleCo2 == 1) {
+      relay = 12;
+      // console.log('GPIO = ', relay);
+    } else if (numSalle == 2) {
+      relay = 25;
+      //  console.log('GPIO = ', relay);
+    } else if (numSalle == 3) {
+      relay = 23;
+      // console.log('GPIO = ', relay);
+    } else if (numSalle == 4) {
+      relay = 24;
+      //  console.log('GPIO = ', relay);
+    } else if (numSalle == 5) {
+      relay = 5;
+      //  console.log('GPIO = ', relay);
+    } else if (numSalle == 6) {
+      relay = 6;
+      //  console.log('GPIO = ', relay);
+    } else if (numSalle == 7) {
+      relay = 26;
+      //  console.log('GPIO = ', relay);
+    }
+  };
+  findGpio();
+
+  //* -------------------------------------------------
+
   console.log(
     vert,
     '[ DEMANDE DE CO2  ] ***********************************************************'
@@ -142,9 +172,8 @@ async function launchProcessCO2() {
     );
 
     //* Activation du relais 4 pour 25 sec.
-
     // activationRelay(27, 25000); //! <==> Test.
-    activationRelay(4, 25);
+    activationRelay(7, 25);
 
     //* On attend 1 seconde.
     await functionsLibrary.delay(1, 'seconde');
@@ -191,7 +220,7 @@ async function launchProcessCO2() {
     //? -------------------------------------------------
   } catch (err) {
     console.log(err, 'Erreur lors de la mesure du co2');
-    request.reject();
+    // request.reject();
     pendingRequest.shift();
 
     if (pendingRequest.length > 0) {
