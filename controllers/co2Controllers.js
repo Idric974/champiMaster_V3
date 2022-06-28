@@ -1,11 +1,10 @@
-// temps = 3:12
-
 //! Les constantes.
 
 const magenta = '\x1b[35m';
 const cyan = '\x1b[36m';
 const jaune = '\x1b[33m';
 const vert = '\u001b[1;32m';
+const red = '\u001b[1;31m';
 const Gpio = require('onoff').Gpio;
 const functionsLibrary = require('../tools/functionsLibrary');
 
@@ -19,6 +18,7 @@ let relay;
 let co2 = 0;
 let co2Room = 0;
 let etat = 0;
+let test = 0;
 
 //! -------------------------------------------------
 
@@ -113,7 +113,7 @@ async function launchProcessCO2() {
 
   console.log(
     vert,
-    '[ DEMANDE DE CO2  ] ***********************************************************'
+    '[ DEMANDE DE CO2  ] ******************** DÉMARRAGE DU CYCLE ******************** '
   );
 
   console.log(
@@ -145,8 +145,16 @@ async function launchProcessCO2() {
       'POMPE AIR SALLE'
     );
     //* Activation du relais de la salle qui demande pour 102 sec.
-    // activationRelay(27, 102000); //! <==> Test.
-    activationRelay(relay, 102000);
+    if (test === 1) {
+      activationRelay(27, 102000); //! <==> Test.
+      console.log(
+        red,
+        '[ DEMANDE DE CO2  ] POMPE AIR SALLE  : MODE = DÉVELOPPEMENT ==> Activation du relais de la salle qui demande pour 102 sec'
+      );
+    } else {
+      activationRelay(relay, 102000);
+      //  console.log(red,' [ DEMANDE DE CO2  ] POMPE AIR SALLE : MODE = PRODUCTION ==> Activation du relais de la salle qui demande pour 102 sec');
+    }
 
     //* On attend 1 seconde.
     await functionsLibrary.delay(1, 'seconde');
@@ -155,8 +163,16 @@ async function launchProcessCO2() {
     activationRelay(20, 100000);
 
     //* Lancement de la mesure du Co2 pour 90 sec.
-    // co2Room = 2500; //! <==> Test.
-    co2Room = await functionsLibrary.mesureCO2(90);
+    if (test === 1) {
+      co2Room = 2500; //! <==> Test.
+      console.log(
+        red,
+        '[ DEMANDE DE CO2  ] POMPE AIR SALLE : MODE = DÉVELOPPEMENT ==> Lancement de la mesure du Co2 pour 90 sec'
+      );
+    } else {
+      co2Room = await functionsLibrary.mesureCO2(90);
+      // console.log(red,' [ DEMANDE DE CO2  ] POMPE AIR SALLE : MODE PRODUCTION ==> Lancement de la mesure du Co2 pour 90 sec';
+    }
 
     //* On attend 15 secondes.
     await functionsLibrary.delay(15, 'seconde');
@@ -172,8 +188,16 @@ async function launchProcessCO2() {
     );
 
     //* Activation du relais 4 pour 25 sec.
-    // activationRelay(27, 25000); //! <==> Test.
-    activationRelay(7, 25);
+    if (test === 1) {
+      activationRelay(27, 25000); //! <==> Test.
+      console.log(
+        red,
+        '[ DEMANDE DE CO2  ] POMPE AIR EXT : MODE = DÉVELOPPEMENT ==> Activation du relais 4 pour 25 sec'
+      );
+    } else {
+      activationRelay(37, 25000);
+      //  console.log(red, [ DEMANDE DE CO2  ] POMPE AIR SALLE : MODE = PRODUCTION ==> Activation du relais 4 pour 25 sec');
+    }
 
     //* On attend 1 seconde.
     await functionsLibrary.delay(1, 'seconde');
@@ -182,8 +206,16 @@ async function launchProcessCO2() {
     activationRelay(20, 20000);
 
     //* Lancement de la mesure du Co2 pour 10 sec.
-    // co2 = 3500; //! <==> Test.
-    co2 = await functionsLibrary.mesureCO2(10);
+    if (test === 1) {
+      co2 = 3500; //! <==> Test.
+      console.log(
+        red,
+        '[ DEMANDE DE CO2  ] POMPE AIR EXT : MODE = DÉVELOPPEMENT ==> Lancement de la mesure du Co2 pour 10 sec'
+      );
+    } else {
+      co2 = await functionsLibrary.mesureCO2(10);
+      //  console.log(red,' [ DEMANDE DE CO2  ] POMPE AIR SALLE : MODE = PRODUCTION ==> Lancement de la mesure du Co2 pour 10 sec');
+    }
 
     //* On attend 15 secondes.
     await functionsLibrary.delay(15, 'seconde');
@@ -211,9 +243,10 @@ async function launchProcessCO2() {
       //* Relance de la fonction si le pool n'est pas vide.
       if (pendingRequest.length > 0) {
         launchProcessCO2();
+        console.log(cyan, '[ DEMANDE DE CO2  ] ETAT DU POOL :', pendingRequest);
       } else {
         etat = 0;
-        console.log(cyan, '[ DEMANDE DE CO2  ] ÉTAT DU POOL :', pendingRequest);
+        console.log(cyan, '[ DEMANDE DE CO2  ] ETAT DU POOL :', pendingRequest);
       }
     }
 
