@@ -18,7 +18,7 @@ let relay;
 let co2 = 0;
 let co2Room = 0;
 let etat = 0;
-let test = 0;
+let test = 1;
 
 //! -------------------------------------------------
 
@@ -231,23 +231,39 @@ async function launchProcessCO2() {
       co2Room
     );
 
-    if (co2 > 0 && co2 < 4000) {
-      co2Room;
+    // if (co2 > 0 && co2 < 4000) {
+    //   co2Room;
+    //   console.log('============> ', co2Room);
 
-      //* Envoie du taux de Co2 au front.
-      request.resolve(co2Room);
+    //   //* Envoie du taux de Co2 au front.
+    //   request.resolve(co2Room);
 
-      //* Suppression de la demande en cours dans le pool.
-      pendingRequest.shift();
+    //   //* Suppression de la demande en cours dans le pool.
+    //   pendingRequest.shift();
 
-      //* Relance de la fonction si le pool n'est pas vide.
-      if (pendingRequest.length > 0) {
-        launchProcessCO2();
-        console.log(cyan, '[ DEMANDE DE CO2  ] ETAT DU POOL :', pendingRequest);
-      } else {
-        etat = 0;
-        console.log(cyan, '[ DEMANDE DE CO2  ] ETAT DU POOL :', pendingRequest);
-      }
+    //   //* Relance de la fonction si le pool n'est pas vide.
+    //   if (pendingRequest.length > 0) {
+    //     launchProcessCO2();
+    //     console.log(cyan, '[ DEMANDE DE CO2  ] ETAT DU POOL :', pendingRequest);
+    //   } else {
+    //     etat = 0;
+    //     console.log(cyan, '[ DEMANDE DE CO2  ] ETAT DU POOL :', pendingRequest);
+    //   }
+    // }
+
+    //* Envoie du taux de Co2 au front.
+    request.resolve(co2Room);
+
+    //* Suppression de la demande en cours dans le pool.
+    pendingRequest.shift();
+
+    //* Relance de la fonction si le pool n'est pas vide.
+    if (pendingRequest.length > 0) {
+      launchProcessCO2();
+      console.log(cyan, '[ DEMANDE DE CO2  ] ETAT DU POOL :', pendingRequest);
+    } else {
+      etat = 0;
+      console.log(cyan, '[ DEMANDE DE CO2  ] ETAT DU POOL :', pendingRequest);
     }
 
     //? -------------------------------------------------
