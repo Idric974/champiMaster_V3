@@ -18,7 +18,7 @@ let relay;
 let co2 = 0;
 let co2Room = 0;
 let etat = 0;
-let test = 1;
+let test = 0;
 
 //! -------------------------------------------------
 
@@ -207,12 +207,14 @@ async function launchProcessCO2() {
 
     //* Lancement de la mesure du Co2 pour 10 sec.
     if (test === 1) {
+      //
       co2 = 3500; //! <==> Test.
       console.log(
         red,
         '[ DEMANDE DE CO2  ] POMPE AIR EXT : MODE = DÉVELOPPEMENT ==> Lancement de la mesure du Co2 pour 10 sec'
       );
     } else {
+      //
       co2 = await functionsLibrary.mesureCO2(10);
       //  console.log(red,' [ DEMANDE DE CO2  ] POMPE AIR SALLE : MODE = PRODUCTION ==> Lancement de la mesure du Co2 pour 10 sec');
     }
@@ -228,31 +230,11 @@ async function launchProcessCO2() {
       cyan,
       '[ DEMANDE DE CO2  ] ' + functionsLibrary.displayTime(),
       'ENVOIE VALEUR : ',
-      co2Room
+      co2
     );
 
-    // if (co2 > 0 && co2 < 4000) {
-    //   co2Room;
-    //   console.log('============> ', co2Room);
-
-    //   //* Envoie du taux de Co2 au front.
-    //   request.resolve(co2Room);
-
-    //   //* Suppression de la demande en cours dans le pool.
-    //   pendingRequest.shift();
-
-    //   //* Relance de la fonction si le pool n'est pas vide.
-    //   if (pendingRequest.length > 0) {
-    //     launchProcessCO2();
-    //     console.log(cyan, '[ DEMANDE DE CO2  ] ETAT DU POOL :', pendingRequest);
-    //   } else {
-    //     etat = 0;
-    //     console.log(cyan, '[ DEMANDE DE CO2  ] ETAT DU POOL :', pendingRequest);
-    //   }
-    // }
-
     //* Envoie du taux de Co2 au front.
-    request.resolve(co2Room);
+    request.resolve(co2);
 
     //* Suppression de la demande en cours dans le pool.
     pendingRequest.shift();
