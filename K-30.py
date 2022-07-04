@@ -38,7 +38,7 @@ for i in range(1, limitMesure):
     high = ord(resp[3])
     low = ord(resp[4])
     co2 = (high*256) + low
-    listCo2.append(co2 * 10)
+    listCo2.append(co2 * 12)
     time.sleep(.5)
 
 print (moyenne(listCo2))

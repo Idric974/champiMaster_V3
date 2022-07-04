@@ -195,7 +195,7 @@ async function launchProcessCO2() {
         '[ DEMANDE DE CO2  ] POMPE AIR EXT : MODE = DÉVELOPPEMENT ==> Activation du relais 4 pour 25 sec'
       );
     } else {
-      activationRelay(37, 25000);
+      activationRelay(26, 25000);
       //  console.log(red, [ DEMANDE DE CO2  ] POMPE AIR SALLE : MODE = PRODUCTION ==> Activation du relais 4 pour 25 sec');
     }
 
@@ -228,11 +228,11 @@ async function launchProcessCO2() {
       cyan,
       '[ DEMANDE DE CO2  ] ' + functionsLibrary.displayTime(),
       'ENVOIE VALEUR : ',
-      co2Room - 500
+      co2Room
     );
 
     if (co2 > 0 && co2 < 4000) {
-      co2Room -= 500;
+      co2Room;
 
       //* Envoie du taux de Co2 au front.
       request.resolve(co2Room);
