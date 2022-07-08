@@ -61,16 +61,12 @@ const activationRelay = (relay, duree) => {
 async function getCo2(numSalle) {
   //
   numSalleCo2 = numSalle;
-  // console.log('co2Controllers ==> numSalleCo2 : ', numSalleCo2);
 
   try {
     return await new Promise((resolve, reject) => {
       pendingRequest.push({ numSalleCo2: numSalleCo2, resolve: resolve });
-      if (etat == 0) {
-        etat = 1;
 
-        launchProcessCO2();
-      }
+      launchProcessCO2();
     });
   } catch (err) {
     console.log('Erreur : co2Manager.js getCo2', err);
@@ -137,7 +133,7 @@ async function launchProcessCO2() {
   );
 
   try {
-    //? POMPE AIR SALLE.
+    //! POMPE AIR SALLE.
 
     console.log(
       cyan,
@@ -179,7 +175,7 @@ async function launchProcessCO2() {
 
     //? -------------------------------------------------
 
-    //? POMPE AIR EXT.
+    //! POMPE AIR EXT.
 
     console.log(
       cyan,
@@ -224,7 +220,7 @@ async function launchProcessCO2() {
 
     //? -------------------------------------------------
 
-    //? ENVOIE VALEUR.
+    //! ENVOIE VALEUR.
 
     console.log(
       cyan,
@@ -239,26 +235,13 @@ async function launchProcessCO2() {
     //* Suppression de la demande en cours dans le pool.
     pendingRequest.shift();
 
-    //* Relance de la fonction si le pool n'est pas vide.
-    if (pendingRequest.length > 0) {
-      launchProcessCO2();
-      console.log(cyan, '[ DEMANDE DE CO2  ] ETAT DU POOL :', pendingRequest);
-    } else {
-      etat = 0;
-      console.log(cyan, '[ DEMANDE DE CO2  ] ETAT DU POOL :', pendingRequest);
-    }
+    console.log(cyan, '[ DEMANDE DE CO2  ] ETAT DU POOL :', pendingRequest);
 
     //? -------------------------------------------------
   } catch (err) {
     console.log(err, 'Erreur lors de la mesure du co2');
     // request.reject();
-    pendingRequest.shift();
-
-    if (pendingRequest.length > 0) {
-      launchProcessCO2();
-    } else {
-      etat = 0;
-    }
+    pendingRequest.pop();
   }
 }
 

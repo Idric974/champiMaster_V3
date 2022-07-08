@@ -1,5 +1,5 @@
 const path = require('path');
-const co2Controllers = require('./controllers/co2Controllers');
+const co2Controllers = require('./controllers/co2Controllers2');
 const express = require('express');
 const app = express();
 const vert = '\u001b[1;32m';
