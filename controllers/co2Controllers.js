@@ -235,6 +235,7 @@ async function launchProcessCO2() {
 
     //* Envoie du taux de Co2 au front.
     request.resolve(co2);
+    //resolve(co2);
 
     //* Suppression de la demande en cours dans le pool.
     pendingRequest.shift();

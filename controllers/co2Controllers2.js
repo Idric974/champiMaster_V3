@@ -18,7 +18,7 @@ let relay;
 let co2 = 0;
 let co2Room = 0;
 let etat = 0;
-let test = 1;
+let test = 0;
 
 //! -------------------------------------------------
 
@@ -233,7 +233,7 @@ async function launchProcessCO2() {
     request.resolve(co2);
 
     //* Suppression de la demande en cours dans le pool.
-    pendingRequest.shift();
+    pendingRequest = [];
 
     console.log(cyan, '[ DEMANDE DE CO2  ] ETAT DU POOL :', pendingRequest);
 
@@ -241,7 +241,7 @@ async function launchProcessCO2() {
   } catch (err) {
     console.log(err, 'Erreur lors de la mesure du co2');
     // request.reject();
-    pendingRequest.pop();
+    pendingRequest = [];
   }
 }
 
