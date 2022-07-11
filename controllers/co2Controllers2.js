@@ -18,7 +18,7 @@ let relay;
 let co2 = 0;
 let co2Room = 0;
 let etat = 0;
-let test = 0;
+let test = 1;
 
 //! -------------------------------------------------
 
